@@ -58,3 +58,16 @@ python3 -m goldtracker analyze             # how often prices change, suggested 
   continuously. That's why both are watched.
 - Sandboxed agent shells (e.g. Cowork cloud/VM) may have an egress allowlist that blocks these
   sites. Test live fetches from the Mac terminal, or a browser tool; unit tests work anywhere.
+
+## Git / pushing
+- Humans push via SSH (`origin`, repo-local `core.sshCommand` picks the key).
+- Sandboxed agents can't use SSH, so they push over HTTPS to remote `agent` using a
+  fine-grained GitHub token (this repo only, Contents: read/write) stored at `.git/gh-token`
+  (inside .git → never committed). Repo-local `credential.https://github.com.helper` reads it.
+  Setup on a new machine/clone:
+  ```bash
+  git remote add agent https://github.com/shivambhavsar/gold-price-tracker.git
+  git config credential.https://github.com.helper '!f() { t="$(git rev-parse --git-dir)/gh-token"; [ -f "$t" ] && { echo username=x-access-token; echo "password=$(tr -d "[:space:]" < "$t")"; }; }; f'
+  pbpaste > .git/gh-token && chmod 600 .git/gh-token   # after copying the token
+  ```
+- Agents: `git push agent main`. Never print, log or commit the token.
