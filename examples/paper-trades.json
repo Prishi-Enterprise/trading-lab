@@ -1,0 +1,17 @@
+[
+  {
+    "id": "fictional-001", "mode": "paper", "side": "long", "symbol": "DEMO-NOT-A-SECURITY",
+    "entry_date": "2026-09-10", "exit_date": "2026-09-11",
+    "quantity": 100, "entry_price": "100.00", "exit_price": "102.00", "costs": "20.00"
+  },
+  {
+    "id": "fictional-002", "mode": "paper", "side": "long", "symbol": "DEMO-NOT-A-SECURITY",
+    "entry_date": "2026-09-14", "exit_date": "2026-09-15",
+    "quantity": 50, "entry_price": "200.00", "exit_price": "196.00", "costs": "20.00"
+  },
+  {
+    "id": "fictional-003", "mode": "paper", "side": "long", "symbol": "DEMO-NOT-A-SECURITY",
+    "entry_date": "2026-09-17", "exit_date": "2026-09-18",
+    "quantity": 20, "entry_price": "300.00", "exit_price": "306.00", "costs": "20.00"
+  }
+]

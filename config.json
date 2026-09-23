@@ -1,0 +1,18 @@
+{
+  "mode": "paper",
+  "currency": "INR",
+  "organisation_budget": "50000.00",
+  "capital_ceiling": "50000.00",
+  "live_trading_allocation": null,
+  "monthly_subscription": "11000.00",
+  "expense_start_month": "2026-10",
+  "capital_deposited": false,
+  "broker": "Groww",
+  "account_status": "Fresh demat planned by user; not opened, connected or funded by this project",
+  "existing_personal_holdings_in_scope": false,
+  "capital_separate_from_living_expenses": true,
+  "experience": "Existing Groww account; occasional equity trading",
+  "usual_holding_period": "Months; willing to adapt",
+  "affordable_total_loss": "5000.00",
+  "loss_limit_period": "Entire experiment, not monthly"
+}

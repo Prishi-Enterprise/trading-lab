@@ -1,0 +1,22 @@
+{
+  "version": "etf-breakout-v1",
+  "frozen_on": "2026-09-21",
+  "mode": "paper",
+  "symbols": ["NIFTYBEES.NS", "JUNIORBEES.NS"],
+  "paper_capital": "28000.00",
+  "subscription_reserve_scenario": "22000.00",
+  "max_position_value": "10000.00",
+  "planned_risk_per_trade": "250.00",
+  "total_loss_limit": "5000.00",
+  "trend_sessions": 200,
+  "breakout_sessions": 20,
+  "atr_sessions": 14,
+  "stop_atr_multiple": "2",
+  "max_holding_sessions": 60,
+  "entry_cap_bps": "30",
+  "slippage_bps": "10",
+  "minimum_average_turnover": "10000000",
+  "trial_start": "2026-09-22",
+  "trial_end": "2026-09-28",
+  "note": "Research allocation only; no live allocation or funding authorised. One position at a time. Parameters frozen before inspecting backtest results."
+}
