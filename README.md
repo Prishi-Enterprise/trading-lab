@@ -29,7 +29,7 @@ The gold tracker retains its original Git history inside this repository. Its ru
 ## Run locally
 
 ```sh
-cd /Users/priya/PrishiAI/trading-lab
+cd /Users/priya/PrishiAI/products/trading-lab
 python3 -m tradinglab status
 python3 -m tradinglab status --month 2026-10 --project-income 4000
 python3 -m tradinglab review --journal examples/paper-trades.json --month 2026-09

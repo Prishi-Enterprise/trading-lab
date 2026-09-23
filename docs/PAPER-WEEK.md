@@ -34,7 +34,7 @@ Universe: NIFTYBEES and JUNIORBEES, chosen before backtesting as broad Indian eq
 
 ## Daily workflow
 
-From `/Users/priya/PrishiAI/trading-lab`, using today's completed exchange date:
+From `/Users/priya/PrishiAI/products/trading-lab`, using today's completed exchange date:
 
 ```sh
 python3 scripts/fetch_market_data.py --asof YYYY-MM-DD

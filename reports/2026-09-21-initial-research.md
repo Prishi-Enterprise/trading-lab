@@ -49,7 +49,7 @@ The initial 21 September paper snapshot contains ₹28,000 simulated cash, no po
 ## Reproduce
 
 ```sh
-cd /Users/priya/PrishiAI/trading-lab
+cd /Users/priya/PrishiAI/products/trading-lab
 python3 scripts/fetch_market_data.py --asof 2026-09-21
 python3 -m tradinglab.research --asof 2026-09-21
 python3 -m unittest discover -s tests -v
