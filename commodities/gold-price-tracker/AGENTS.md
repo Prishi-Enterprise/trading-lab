@@ -1,4 +1,4 @@
-# Gold Price Tracker — agent instructions
+# Gold Price Tracker · Trading Lab — agent instructions
 
 Canonical instructions for any coding agent (Claude Code, Cowork, Cursor, Codex…).
 `CLAUDE.md` just imports this file. Everything needed to operate the project lives in
@@ -60,14 +60,7 @@ python3 -m goldtracker analyze             # how often prices change, suggested 
   sites. Test live fetches from the Mac terminal, or a browser tool; unit tests work anywhere.
 
 ## Git / pushing
-- Humans push via SSH (`origin`, repo-local `core.sshCommand` picks the key).
-- Sandboxed agents can't use SSH, so they push over HTTPS to remote `agent` using a
-  fine-grained GitHub token (this repo only, Contents: read/write) stored at `.git/gh-token`
-  (inside .git → never committed). Repo-local `credential.https://github.com.helper` reads it.
-  Setup on a new machine/clone:
-  ```bash
-  git remote add agent https://github.com/shivambhavsar/gold-price-tracker.git
-  git config credential.https://github.com.helper '!f() { t="$(git rev-parse --git-dir)/gh-token"; [ -f "$t" ] && { echo username=x-access-token; echo "password=$(tr -d "[:space:]" < "$t")"; }; }; f'
-  pbpaste > .git/gh-token && chmod 600 .git/gh-token   # after copying the token
-  ```
-- Agents: `git push agent main`. Never print, log or commit the token.
+- This module lives at `commodities/gold-price-tracker` inside the public Trading Lab repository.
+- Commit and push from the Trading Lab repository root on its single `main` branch.
+- The original standalone repository history was merged without squashing so its two original commits remain traceable.
+- Never print, log or commit notification credentials or runtime state.

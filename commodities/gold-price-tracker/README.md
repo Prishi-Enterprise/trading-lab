@@ -1,4 +1,4 @@
-# gold-price-tracker
+# Gold Price Tracker · Trading Lab
 
 Ahmedabad gold price tracker → WhatsApp alerts when price moves **±2 / ±5 / ±10 %** vs the day's
 opening price. Runs on a Mac via launchd every 10 min; can learn a better interval from how often
@@ -10,7 +10,7 @@ live MCX) and [allindiabullion.com](https://allindiabullion.com/gold-rate/gujara
 
 ## Quick start (Mac)
 ```bash
-cd ~/PrishiAI/gold-price-tracker
+cd ~/PrishiAI/trading-lab/commodities/gold-price-tracker
 python3 -m unittest discover -s tests       # offline tests
 python3 -m goldtracker check                # live prices from both sites
 cp .env.example .env                        # then pick a WhatsApp provider: docs/whatsapp.md
@@ -28,7 +28,7 @@ tail -f state/launchd.log
 | `./scripts/install_launchd.sh uninstall` | stop |
 
 ## Working on it with an AI agent
-All instructions are in the repo, not in any AI account: [AGENTS.md](AGENTS.md) (canonical),
+All module instructions are in this directory: [AGENTS.md](AGENTS.md) (canonical),
 [CLAUDE.md](CLAUDE.md) (imports it), and playbooks in
 [skills/gold-tracker/SKILL.md](skills/gold-tracker/SKILL.md) (run `./scripts/link_skills.sh` once to expose it to Claude Code / Cursor). Open the folder in
 Claude Code / Cowork / Cursor and ask e.g. "check the gold tracker is healthy" or "the bullions

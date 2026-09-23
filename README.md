@@ -4,6 +4,13 @@ Research and paper-trade review under PrishiAI. Self-contained Python 3.9+ proje
 
 The authenticated [Trading Lab frontend](frontend/README.md) presents the frozen paper record, data-quality blocks, risk limits and historical evidence behind a separate email-code login. It has its own Supabase and Vercel projects so Festival membership and financial data remain isolated. The dashboard is deployed at [trading.prishi.in](https://trading.prishi.in).
 
+Trading Lab has two main sections:
+
+- **Stocks** — the frozen ETF breakout research and prospective paper record.
+- **Commodities** — focused observation tools, beginning with the migrated [Ahmedabad Gold Price Tracker](commodities/gold-price-tracker/README.md).
+
+The gold tracker retains its original Git history inside this repository. Its runtime state and notification credentials remain local and ignored.
+
 **Current result:** [21 September research report](reports/2026-09-21-initial-research.md). The first strategy has weak historical results and neither ETF qualifies for a 22 September paper buy. No profitable strategy has been established.
 
 **Authorised trial:** [22–28 September paper week](docs/PAPER-WEEK.md). Five weekday reviews at 17:30 IST are scheduled through the current Codex task, with a final review on 28 September. The host must be available. No real investment during this test; completion does not automatically enable it. A new eligible paper card includes entry ceiling, stop, quantity, cost assumptions and expiry. Quiet no-trade days remain in the record.

@@ -5,6 +5,7 @@ Read README.md, config.json and docs/RESEARCH.md before extending this project.
 The user will arrange a fresh demat account for this experiment. Existing personal holdings are explicitly out of scope; do not request them again or make research depend on them. The new account has not been confirmed opened, funded or connected. Groww is the user's existing broker; confirm the new account's actual broker and applicable charges when available. Begin with an empty research portfolio, not an assumed ₹50,000 brokerage balance.
 
 - Python 3.9+ standard library only. Run `python3 -m unittest discover -s tests -v` after code changes.
+- `commodities/gold-price-tracker` is the migrated zero-dependency Ahmedabad gold watcher. Preserve its parser fixtures and operating constraints, keep its runtime `state/` and `.env` ignored, and run its own unittest suite after module changes.
 - This is a paper-research project with a public daily-data downloader, frozen ETF screener/backtest and prospective paper recorder. There is no brokerage connection, streaming price feed or order execution. Read docs/PAPER-WEEK.md for the user-authorised 22–28 September 2026 trial; the user executes any eventual real orders and has required dummy testing before investment.
 - ₹50,000 is the total Prishi organisation fund, separate from personal living expenses. It is not a confirmed brokerage deposit or an agreed trading allocation. The user uses Groww and generally holds equities for months, but is willing to adapt. Total accepted loss limit is ₹5,000 for the experiment, not per month. Subscription reserve and deployable trading amount remain undecided. `capital_ceiling` is a paper-only assumption bounded by `organisation_budget`; never interpret it as money allocated to live trading.
 - Treat the ₹5,000 limit as net trading loss from the experiment's starting capital, including charges and open-position losses, excluding subscription withdrawals. Current CLI flags only recorded closed-trade loss from starting paper capital; retain any historical breach even after recovery. It cannot enforce the full limit or guarantee execution prices. No automatic live orders.
@@ -27,4 +28,5 @@ python3 -m unittest discover -s tests -v
 python3 scripts/fetch_market_data.py --asof YYYY-MM-DD
 python3 -m tradinglab.research --asof YYYY-MM-DD
 python3 -m tradinglab.paper --asof YYYY-MM-DD
+cd commodities/gold-price-tracker && python3 -m unittest discover -s tests -v
 ```
