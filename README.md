@@ -2,7 +2,7 @@
 
 Research and paper-trade review under PrishiAI. Self-contained Python 3.9+ project with no dependencies, following the gold tracker's portable layout. Includes a capital planner, manual journal analyser, public daily-data downloader, frozen ETF screener/backtest and prospective paper recorder. No brokerage connection or real-order execution.
 
-The authenticated [Trading Lab frontend](frontend/README.md) presents the frozen paper record, data-quality blocks, risk limits and historical evidence behind a separate email-code login. It has its own Supabase and Vercel projects so Festival membership and financial data remain isolated. The dashboard is deployed at [prishi-trading-lab.vercel.app](https://prishi-trading-lab.vercel.app).
+The authenticated [Trading Lab frontend](frontend/README.md) presents the frozen paper record, data-quality blocks, risk limits and historical evidence behind a separate email-code login. It has its own Supabase and Vercel projects so Festival membership and financial data remain isolated. The dashboard is deployed at [trading.prishi.in](https://trading.prishi.in).
 
 **Current result:** [21 September research report](reports/2026-09-21-initial-research.md). The first strategy has weak historical results and neither ETF qualifies for a 22 September paper buy. No profitable strategy has been established.
 
