@@ -69,12 +69,66 @@ def save_state(path: Path, state: dict) -> None:
 
 def append_history(path: Path, now: datetime, q: sources.Quote) -> None:
     hist = path.parent / "history.csv"
+    hist.parent.mkdir(parents=True, exist_ok=True)
     new = not hist.exists()
     with hist.open("a") as f:
         if new:
             f.write("checked_at,metric,price,site_as_of\n")
         f.write(f"{now.isoformat(timespec='seconds')},{q.metric},{q.price:.2f},"
                 f"{q.as_of.isoformat(timespec='minutes') if q.as_of else ''}\n")
+
+
+def dashboard_payload(cfg: dict, state: dict) -> dict:
+    """Return the sanitized record published to the authenticated dashboard."""
+    run = state.get("last_run") or {}
+    if not run.get("checked_at"):
+        raise ValueError("No completed tracker run is available")
+
+    metrics = []
+    for watched in cfg.get("watch", []):
+        metric = watched["metric"]
+        latest = state.get("last", {}).get(metric)
+        if not latest:
+            continue
+        opened = state.get("open", {}).get(metric)
+        change_pct = None
+        if opened and opened.get("price"):
+            change_pct = round((latest["price"] - opened["price"]) / opened["price"] * 100, 4)
+        metrics.append({
+            "metric": metric,
+            "label": watched.get("label", metric),
+            "price": latest["price"],
+            "unit": "INR / 10g",
+            "as_of": latest.get("as_of"),
+            "checked_at": latest.get("checked_at"),
+            "open_price": opened.get("price") if opened else None,
+            "open_at": opened.get("at") if opened else None,
+            "change_pct": change_pct,
+            "alerts_sent": state.get("alerts_sent", {}).get(metric, []),
+        })
+
+    status = run.get("status", "failed")
+    labels = {
+        "verified": "Gold sources verified",
+        "partial": "Gold update partially verified",
+        "failed": "Gold sources unavailable",
+    }
+    summaries = {
+        "verified": f"Recorded {len(metrics)} watched metrics from same-day public source snapshots.",
+        "partial": f"Recorded {len(metrics)} watched metrics, with one or more source or freshness issues.",
+        "failed": "No current watched metric could be verified; the previous quote remains historical only.",
+    }
+    return {
+        "observed_at": run["checked_at"],
+        "observed_on": state.get("date"),
+        "status": status,
+        "headline": labels.get(status, labels["failed"]),
+        "summary": summaries.get(status, summaries["failed"]),
+        "metrics": metrics,
+        "issues": run.get("issues", []),
+        "interval_minutes": state.get("interval_min", cfg.get("interval", {}).get("minutes", 10)),
+        "source": "Ahmedabad gold tracker",
+    }
 
 
 # --------------------------------------------------------------------------- helpers
@@ -155,6 +209,7 @@ def run(cfg: dict, notifier, now: Optional[datetime] = None, force: bool = False
     state["interval_min"] = interval
 
     quotes, errors = fetch_all(cfg, getter)
+    issues = list(errors)
     for e in errors:
         log(f"WARN {e}")
 
@@ -171,6 +226,8 @@ def run(cfg: dict, notifier, now: Optional[datetime] = None, force: bool = False
                 state["fail_alerted"] = today
             except NotifyError as e:
                 log(f"ERROR notify: {e}")
+        state["last_run"] = {"checked_at": now.isoformat(timespec="seconds"),
+                             "status": "failed", "issues": issues}
         save_state(spath, state)
         return 2
     state["fail_streak"] = 0
@@ -181,6 +238,7 @@ def run(cfg: dict, notifier, now: Optional[datetime] = None, force: bool = False
         q = quotes.get(metric)
         if not q:
             log(f"WARN {metric}: not available this run")
+            issues.append(f"{metric}: not available this run")
             continue
         append_history(spath, now, q)
         state["last"][metric] = {"price": q.price, "as_of": q.as_of.isoformat() if q.as_of else None,
@@ -188,6 +246,7 @@ def run(cfg: dict, notifier, now: Optional[datetime] = None, force: bool = False
 
         if q.as_of and q.as_of.date() != now.date():
             log(f"{metric}: {inr(q.price)} is stale (site time {q.as_of:%d %b %H:%M}) – waiting for today's rate")
+            issues.append(f"{metric}: source quote is stale ({q.as_of.isoformat()})")
             continue
 
         op = state["open"].get(metric)
@@ -210,7 +269,10 @@ def run(cfg: dict, notifier, now: Optional[datetime] = None, force: bool = False
             log(f"ALERT sent for {metric} ({worst:+g}%) via {notifier.name}")
         except NotifyError as e:
             log(f"ERROR notify: {e}")
+            issues.append(f"{metric}: notification failed")
             rc = 3  # not marked as sent -> retried next run
 
+    state["last_run"] = {"checked_at": now.isoformat(timespec="seconds"),
+                         "status": "verified" if not issues else "partial", "issues": issues}
     save_state(spath, state)
     return rc

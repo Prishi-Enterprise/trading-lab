@@ -20,7 +20,7 @@ export async function emailLogin(previous: LoginState, form: FormData): Promise<
   if (intent === "verify") {
     const code = loginCode.safeParse(form.get("code"));
     if (!code.success) {
-      return { ...previous, email: value, step: "code", error: "Enter the six-digit code from your email." };
+      return { ...previous, email: value, step: "code", error: "Enter the eight-digit code from your email." };
     }
 
     const { error } = await supabase.auth.verifyOtp({ email: value, token: code.data, type: "email" });

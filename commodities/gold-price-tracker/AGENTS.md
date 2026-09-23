@@ -36,6 +36,7 @@ python3 -m goldtracker run --force         # one tick ignoring the active window
 python3 -m goldtracker status              # today's open / last / alerts_sent
 python3 -m goldtracker test-alert          # send sample WhatsApp via NOTIFIER
 python3 -m goldtracker analyze             # how often prices change, suggested interval per hour
+python3 -m goldtracker dashboard           # sanitized JSON for Supabase publication
 ./scripts/install_launchd.sh [uninstall]   # (re)install the Mac job after config interval changes
 ```
 

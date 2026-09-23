@@ -12,7 +12,7 @@ export default function LoginPage() {
           <h1>Follow the process.<br /><span>Protect the capital.</span></h1>
           <p>One private place to review signals, decisions, data checks and the evidence behind our trading idea.</p>
         </div>
-        <footer>Prishi / India <span>•</span> Paper trading only</footer>
+        <footer><a href="https://www.prishi.in">Prishi / India</a> <span>•</span> Paper trading only</footer>
       </section>
       <section className="login-panel">
         <div className="login-card">
@@ -24,6 +24,7 @@ export default function LoginPage() {
             <span className="shield" aria-hidden="true">✓</span>
             <p>This dashboard shows research and simulated results. It cannot place trades or access a brokerage account.</p>
           </div>
+          <a className="prishi-home-link" href="https://www.prishi.in">← Back to prishi.in</a>
         </div>
       </section>
     </main>

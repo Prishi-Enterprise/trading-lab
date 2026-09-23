@@ -24,6 +24,7 @@ tail -f state/launchd.log
 |---|---|
 | `python3 -m goldtracker status` | today's open, last price, alerts sent |
 | `python3 -m goldtracker analyze` | how often prices change per hour → suggested interval |
+| `python3 -m goldtracker dashboard` | sanitized JSON for the authenticated Trading Lab page |
 | edit `config.json` | thresholds, watched metrics, hours, interval mode |
 | `./scripts/install_launchd.sh uninstall` | stop |
 

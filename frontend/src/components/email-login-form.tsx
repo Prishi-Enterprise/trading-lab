@@ -38,7 +38,7 @@ export function EmailLoginForm({ configured }: { configured: boolean }) {
           <input type="hidden" name="email" value={state.email} />
           <label>
             Sign-in code
-            <input key={state.sent} name="code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" minLength={6} maxLength={6} required autoFocus placeholder="6-digit code" />
+            <input key={state.sent} name="code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{8}" minLength={8} maxLength={8} required autoFocus placeholder="8-digit code" />
           </label>
           <small>The code expires in 10 minutes. Only the latest code works.</small>
           <button className="primary-button" name="intent" value="verify" disabled={pending}>

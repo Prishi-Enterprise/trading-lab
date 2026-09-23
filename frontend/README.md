@@ -15,7 +15,8 @@ Set the public URL and publishable key from the dedicated Supabase project. The 
 Apply `supabase/migrations/202609230001_initial.sql` to the Trading Lab Supabase project. The migration creates:
 
 - `trading_members`, with one-time membership claiming tied to the authenticated email;
-- `paper_updates`, the read-only dashboard feed;
+- `paper_updates`, the read-only stock paper-trading feed;
+- `gold_updates`, the authenticated Ahmedabad gold collection feed;
 - row-level policies that allow active Trading Lab members to read the dashboard;
 - the verified 21 September seed and the blocked 22 September review.
 

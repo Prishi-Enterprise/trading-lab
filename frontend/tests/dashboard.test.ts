@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { explainReason, money, trialStatus, type PaperUpdate } from "../src/lib/dashboard";
+import { loginCode } from "../src/lib/login-validation";
 
 const blocked: PaperUpdate = {
   as_of: "2026-09-22",
@@ -26,5 +27,10 @@ describe("dashboard presentation", () => {
 
   it("turns strategy reason codes into readable text", () => {
     expect(explainReason("no_close_above_previous_20_session_high")).toBe("No close above the previous 20-session high");
+  });
+
+  it("accepts the eight-digit code sent by Supabase", () => {
+    expect(loginCode.safeParse("12345678").success).toBe(true);
+    expect(loginCode.safeParse("123456").success).toBe(false);
   });
 });

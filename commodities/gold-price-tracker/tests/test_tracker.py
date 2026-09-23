@@ -149,6 +149,24 @@ class TrackerTests(unittest.TestCase):
         self.tick(100000, "2026-09-18T10:44:00", rec)
         self.assertEqual(rec.sent, [])
 
+    def test_dashboard_payload_is_sanitized(self):
+        self.tick(154090, "2026-09-18T10:41:00")
+        state = json.loads(Path(os.environ["GOLD_STATE"]).read_text())
+        payload = tracker.dashboard_payload(self.cfg, state)
+        self.assertEqual(payload["status"], "verified")
+        self.assertEqual(payload["observed_on"], "2026-09-18")
+        self.assertEqual(payload["metrics"][0]["price"], 154090)
+        self.assertEqual(payload["metrics"][0]["open_price"], 154090)
+        self.assertEqual(payload["metrics"][0]["change_pct"], 0.0)
+        self.assertNotIn("alerts_sent", payload)
+
+    def test_run_creates_nested_state_directory(self):
+        nested = Path(self.tmp.name) / "nested" / "state.json"
+        os.environ["GOLD_STATE"] = str(nested)
+        self.tick(154090, "2026-09-18T10:41:00")
+        self.assertTrue(nested.exists())
+        self.assertTrue((nested.parent / "history.csv").exists())
+
 
 class LearnTests(unittest.TestCase):
     def test_suggest(self):

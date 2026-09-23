@@ -18,6 +18,31 @@ export type Signal = {
   reasons?: string[];
 };
 
+export type GoldMetric = {
+  metric: string;
+  label: string;
+  price: number;
+  unit: string;
+  as_of: string | null;
+  checked_at: string;
+  open_price: number | null;
+  open_at: string | null;
+  change_pct: number | null;
+  alerts_sent: number[];
+};
+
+export type GoldUpdate = {
+  observed_at: string;
+  observed_on: string;
+  status: "verified" | "partial" | "failed";
+  headline: string;
+  summary: string;
+  metrics: GoldMetric[];
+  issues: string[];
+  interval_minutes: number;
+  source: string;
+};
+
 export const trialDates = ["2026-09-22", "2026-09-23", "2026-09-24", "2026-09-25", "2026-09-28"];
 
 export function money(value: unknown) {

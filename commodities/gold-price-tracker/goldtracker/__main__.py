@@ -5,6 +5,7 @@
   python -m goldtracker status             # show today's open / last / alerts from state file
   python -m goldtracker test-alert         # send a sample alert through the configured NOTIFIER
   python -m goldtracker analyze            # how often prices change per hour -> suggested interval
+  python -m goldtracker dashboard          # sanitized JSON for the private dashboard
 """
 from __future__ import annotations
 
@@ -20,7 +21,7 @@ from .timeutil import IST, inr
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(prog="goldtracker")
-    p.add_argument("cmd", choices=["check", "run", "status", "test-alert", "analyze"])
+    p.add_argument("cmd", choices=["check", "run", "status", "test-alert", "analyze", "dashboard"])
     p.add_argument("--force", action="store_true", help="ignore active window")
     p.add_argument("--notifier", help="override NOTIFIER env (console|meta|twilio|callmebot)")
     p.add_argument("--config", help="path to config.json")
@@ -48,6 +49,15 @@ def main(argv=None) -> int:
 
     if a.cmd == "status":
         print(json.dumps(tracker.load_state(tracker.state_path(cfg)), indent=2, ensure_ascii=False))
+        return 0
+
+    if a.cmd == "dashboard":
+        try:
+            payload = tracker.dashboard_payload(cfg, tracker.load_state(tracker.state_path(cfg)))
+        except ValueError as e:
+            print(f"ERROR {e}")
+            return 2
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
         return 0
 
     try:
