@@ -2,7 +2,7 @@
 
 Research and paper-trade review under PrishiAI. Self-contained Python 3.9+ project with no dependencies, following the gold tracker's portable layout. Includes a capital planner, manual journal analyser, public daily-data downloader, frozen ETF screener/backtest and prospective paper recorder. No brokerage connection or real-order execution.
 
-The private [Trading Lab frontend](frontend/README.md) presents the frozen paper record, data-quality blocks, risk limits and historical evidence behind a separate email-code login. It has its own Supabase and Vercel projects so Festival membership and financial data remain isolated.
+The authenticated [Trading Lab frontend](frontend/README.md) presents the frozen paper record, data-quality blocks, risk limits and historical evidence behind a separate email-code login. It has its own Supabase and Vercel projects so Festival membership and financial data remain isolated. The dashboard is deployed at [prishi-trading-lab.vercel.app](https://prishi-trading-lab.vercel.app).
 
 **Current result:** [21 September research report](reports/2026-09-21-initial-research.md). The first strategy has weak historical results and neither ETF qualifies for a 22 September paper buy. No profitable strategy has been established.
 
@@ -65,7 +65,7 @@ state/                  ignored market inputs, results and frozen paper snapshot
 frontend/               private Next.js progress dashboard and Supabase schema
 ```
 
-The folder is currently versioned as part of PrishiAI; no separate GitHub repository or public deployment has been created.
+This project is maintained in the public `Prishi-Enterprise/trading-lab` repository with `main` as its only branch. Public source access does not bypass the dashboard login or Supabase row-level security.
 
 The user will arrange a **fresh demat account** for this experiment. Existing holdings are explicitly outside scope and no holdings export is required to begin. The new account is not yet confirmed opened, funded or connected. Groww is the user's current broker; verify the new account's broker and charges when available.
 
