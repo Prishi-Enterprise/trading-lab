@@ -34,11 +34,11 @@ and verify with `python3 -m goldtracker test-alert`. Never commit `.env`.
 - Runs only while the Mac is awake; missed ticks run on wake.
 
 ## 5. Learn a better polling interval
-1. Let it run a few days at a fixed 10 min (history accumulates in `state/history.csv`).
+1. Let it run a few days at a fixed 30 min (history accumulates in `state/history.csv`).
 2. `python3 -m goldtracker analyze` → per metric, per IST hour: checks, how many saw a price change,
    suggested minutes (≥60 % checks changing → `min`; ≤10 % → `max`; linear in between).
-3. To let the tracker apply it automatically: set `"interval": {"mode": "adaptive", "minutes": 10,
-   "min": 5, "max": 30}` (optionally `"learn_from": ["bullions:gold24k_10g"]` to learn only from the
+3. To let the tracker apply it automatically: set `"interval": {"mode": "adaptive", "minutes": 30,
+   "min": 30, "max": 120}` (optionally `"learn_from": ["bullions:gold24k_10g"]` to learn only from the
    slow association rate), then re-run `./scripts/install_launchd.sh` (launchd now fires every `min`
    minutes; ticks skip until the learned interval for that hour has passed).
 

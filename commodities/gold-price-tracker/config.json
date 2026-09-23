@@ -1,9 +1,9 @@
 {
   "city": "Ahmedabad",
   "active_days": [0, 1, 2, 3, 4, 5],
-  "active_window": ["09:00", "23:45"],
+  "active_window": ["09:00", "23:30"],
   "thresholds_pct": [-2, -5, -10, 2, 5, 10],
-  "interval": { "mode": "fixed", "minutes": 10, "min": 5, "max": 30 },
+  "interval": { "mode": "adaptive", "minutes": 30, "min": 30, "max": 120 },
   "failure_alert_after": 6,
   "state_file": "state/state.json",
   "sources": {

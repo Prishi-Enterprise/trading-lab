@@ -5,9 +5,9 @@ Canonical instructions for any coding agent (Claude Code, Cowork, Cursor, Codex�
 this repo — no account-level memory, skills or connectors are required.
 
 ## What it does
-Polls Ahmedabad gold rates every ~10 min (macOS launchd), records the day's **opening price**
+Polls Ahmedabad gold rates on a 30-minute base schedule, records the day's **opening price**
 per metric, and sends a **WhatsApp alert** when the price moves **±2 / ±5 / ±10 %** vs that
-open (each threshold once per metric per day). Polling interval can be learned from how
+open (each threshold once per metric per day). Polling interval is learned from how
 often prices actually change (`interval.mode = "adaptive"`).
 
 ## Layout

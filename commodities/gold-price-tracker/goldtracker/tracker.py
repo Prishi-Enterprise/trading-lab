@@ -1,4 +1,4 @@
-"""Core loop (one invocation = one check). Designed to be run every ~10 min by cron,
+"""Core loop (one invocation = one check). Designed for a 30-minute base cron,
 GitHub Actions or launchd. State lives in a small JSON file so runs are stateless otherwise.
 
 Rules
@@ -126,7 +126,7 @@ def dashboard_payload(cfg: dict, state: dict) -> dict:
         "summary": summaries.get(status, summaries["failed"]),
         "metrics": metrics,
         "issues": run.get("issues", []),
-        "interval_minutes": state.get("interval_min", cfg.get("interval", {}).get("minutes", 10)),
+        "interval_minutes": state.get("interval_min", cfg.get("interval", {}).get("minutes", 30)),
         "source": "Ahmedabad gold tracker",
     }
 
@@ -141,7 +141,7 @@ def _hm(s: str) -> int:
 def in_window(cfg: dict, now: datetime) -> bool:
     if now.weekday() not in cfg.get("active_days", [0, 1, 2, 3, 4, 5]):
         return False
-    start, end = cfg.get("active_window", ["09:00", "23:45"])
+    start, end = cfg.get("active_window", ["09:00", "23:30"])
     mins = now.hour * 60 + now.minute
     return _hm(start) <= mins <= _hm(end)
 

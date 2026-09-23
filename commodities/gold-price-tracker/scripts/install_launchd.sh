@@ -19,7 +19,7 @@ fi
 MINUTES="$("$PY" - "$REPO/config.json" <<'EOF'
 import json, sys
 iv = json.load(open(sys.argv[1])).get("interval", {})
-print(iv.get("min", 5) if iv.get("mode") == "adaptive" else iv.get("minutes", 10))
+print(iv.get("min", 30) if iv.get("mode") == "adaptive" else iv.get("minutes", 30))
 EOF
 )"
 SECONDS_=$(( MINUTES * 60 ))

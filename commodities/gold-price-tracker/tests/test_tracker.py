@@ -69,6 +69,7 @@ class TrackerTests(unittest.TestCase):
         os.environ["GOLD_STATE"] = str(Path(self.tmp.name) / "state.json")
         self.cfg = json.loads((tracker.ROOT / "config.json").read_text())
         self.cfg["watch"] = [{"metric": "bullions:gold24k_10g", "label": "24K"}]
+        self.cfg["interval"] = {"mode": "fixed", "minutes": 10, "min": 5, "max": 30}
         self.base = page("bullions_ahmedabad.html")
 
     def tearDown(self):

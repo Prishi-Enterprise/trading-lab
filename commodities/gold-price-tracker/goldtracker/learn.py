@@ -64,7 +64,7 @@ def suggest_minutes(checks: int, changes: int, cur: int, lo: int, hi: int, min_s
 
 def learned_interval(cfg: dict, history: Path, hour: int) -> int:
     iv = cfg.get("interval", {})
-    cur, lo, hi = iv.get("minutes", 10), iv.get("min", 5), iv.get("max", 30)
+    cur, lo, hi = iv.get("minutes", 30), iv.get("min", 30), iv.get("max", 120)
     if iv.get("mode", "fixed") != "adaptive":
         return cur
     metrics = iv.get("learn_from") or [w["metric"] for w in cfg["watch"]]
@@ -78,7 +78,7 @@ def report(cfg: dict, history: Path) -> str:
     if not rows:
         return "no history yet (state/history.csv) – let the tracker run for a few days first"
     iv = cfg.get("interval", {})
-    cur, lo, hi = iv.get("minutes", 10), iv.get("min", 5), iv.get("max", 30)
+    cur, lo, hi = iv.get("minutes", 30), iv.get("min", 30), iv.get("max", 120)
     days = len({r[0].date() for r in rows})
     lines = [f"history: {len(rows)} observations over {days} day(s); mode={iv.get('mode', 'fixed')}", ""]
     for metric in sorted({r[1] for r in rows}):

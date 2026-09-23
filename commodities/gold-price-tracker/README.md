@@ -1,12 +1,15 @@
 # Gold Price Tracker · Trading Lab
 
 Ahmedabad gold price tracker → WhatsApp alerts when price moves **±2 / ±5 / ±10 %** vs the day's
-opening price. Runs on a Mac via launchd every 10 min; can learn a better interval from how often
-prices actually change. Zero dependencies (Python ≥ 3.9 stdlib).
+opening price. The hosted dashboard uses Supabase Cron and an Edge Function on a 30-minute base
+schedule, then learns a 30–120 minute collection interval by IST hour. The zero-dependency Python
+runner remains available as a local fallback (Python ≥ 3.9 stdlib).
 
-Sources: [bullions.co.in](https://bullions.co.in/location/ahmedabad/) (24K/22K association rate +
-live MCX) and [allindiabullion.com](https://allindiabullion.com/gold-rate/gujarat/ahmedabad)
-(retail/RTGS 999/995). Findings in [docs/research.md](docs/research.md).
+The hosted worker reads [bullions.co.in](https://bullions.co.in/location/ahmedabad/) for the
+Ahmedabad association rate and MCX snapshot, plus the timestamped 24K showroom rate from
+[Suvarnakrupa](https://www.suvarnakrupa.in/today-gold-rate). The local fallback also supports
+[allindiabullion.com](https://allindiabullion.com/gold-rate/gujarat/ahmedabad); that site blocks
+Supabase datacenter traffic. Findings in [docs/research.md](docs/research.md).
 
 ## Quick start (Mac)
 ```bash
@@ -15,7 +18,7 @@ python3 -m unittest discover -s tests       # offline tests
 python3 -m goldtracker check                # live prices from both sites
 cp .env.example .env                        # then pick a WhatsApp provider: docs/whatsapp.md
 python3 -m goldtracker test-alert           # confirm WhatsApp works
-./scripts/install_launchd.sh                # start the 10-min schedule
+./scripts/install_launchd.sh                # start the adaptive local fallback
 tail -f state/launchd.log
 ```
 
