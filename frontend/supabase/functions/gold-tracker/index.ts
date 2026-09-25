@@ -31,6 +31,18 @@ type GoldUpdate = {
 };
 
 type HistoryRow = Pick<GoldUpdate, "observed_at" | "observed_on" | "metrics" | "source">;
+type AlertDelivery = {
+  observed_on: string;
+  metric: string;
+  threshold: number;
+  label: string;
+  price: number;
+  open_price: number;
+  change_pct: number;
+  triggered_at: string;
+  status: "pending" | "sent" | "failed" | "expired";
+  attempts: number;
+};
 
 const IST = "Asia/Kolkata";
 const SOURCES = {
@@ -195,6 +207,82 @@ async function restRequest(url: string, serviceKey: string, init: RequestInit = 
   });
 }
 
+async function deliverPendingAlerts(supabaseUrl: string, serviceKey: string) {
+  const apiKey = Deno.env.get("RESEND_API_KEY");
+  const sender = Deno.env.get("GOLD_ALERT_FROM");
+  const recipient = Deno.env.get("GOLD_ALERT_TO");
+  if (!apiKey || !sender || !recipient) return { state: "not_configured", sent: 0 };
+
+  const pendingResponse = await restRequest(
+    `${supabaseUrl}/rest/v1/gold_alert_deliveries?status=eq.pending&select=*&order=triggered_at.asc&limit=8`,
+    serviceKey,
+  );
+  if (!pendingResponse.ok) throw new Error(`Could not load pending alerts: HTTP ${pendingResponse.status}`);
+  const pending = await pendingResponse.json() as AlertDelivery[];
+  let sent = 0;
+  for (const alert of pending) {
+    const direction = alert.threshold > 0 ? `+${alert.threshold}%` : `${alert.threshold}%`;
+    const key = `gold-${alert.observed_on}-${alert.metric}-${alert.threshold}`;
+    const message = [
+      `${alert.label} moved ${direction} from its ${alert.observed_on} IST opening capture.`,
+      `Latest captured price: ₹${alert.price.toLocaleString("en-IN")} / 10g`,
+      `Opening capture: ₹${alert.open_price.toLocaleString("en-IN")} / 10g`,
+      `Change: ${alert.change_pct.toFixed(2)}%`,
+      `Captured: ${new Date(alert.triggered_at).toLocaleString("en-IN", { timeZone: IST })} IST`,
+      "These are indicative public-source prices, not executable quotes or trade advice.",
+      "View the tracker: https://trading.prishi.in/commodities/gold",
+    ].join("\n");
+    let deliveryStatus: AlertDelivery["status"] = "pending";
+    let providerId: string | null = null;
+    let lastError: string | null = null;
+    if (new Date().getTime() - new Date(alert.triggered_at).getTime() > 6 * 60 * 60 * 1000) {
+      deliveryStatus = "expired";
+      lastError = "Alert exceeded the six-hour delivery window";
+    } else {
+      try {
+        const response = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            authorization: `Bearer ${apiKey}`,
+            "content-type": "application/json",
+            "Idempotency-Key": key,
+          },
+          body: JSON.stringify({ from: sender, to: [recipient], subject: `Gold alert: ${alert.label} ${direction} vs daily open`, text: message }),
+          signal: AbortSignal.timeout(8_000),
+        });
+        if (response.ok) {
+          const result = await response.json() as { id?: string };
+          deliveryStatus = "sent";
+          providerId = result.id ?? null;
+          sent += 1;
+        } else {
+          deliveryStatus = response.status >= 400 && response.status < 500 && response.status !== 429 && response.status !== 409 ? "failed" : "pending";
+          lastError = `Email provider HTTP ${response.status}`;
+        }
+      } catch {
+        lastError = "Email provider request failed";
+      }
+    }
+    const alertUrl = new URL(`${supabaseUrl}/rest/v1/gold_alert_deliveries`);
+    alertUrl.searchParams.set("observed_on", `eq.${alert.observed_on}`);
+    alertUrl.searchParams.set("metric", `eq.${alert.metric}`);
+    alertUrl.searchParams.set("threshold", `eq.${alert.threshold}`);
+    const saved = await restRequest(alertUrl.toString(), serviceKey, {
+      method: "PATCH",
+      headers: { prefer: "return=minimal" },
+      body: JSON.stringify({
+        status: deliveryStatus,
+        attempts: alert.attempts + 1,
+        sent_at: deliveryStatus === "sent" ? new Date().toISOString() : null,
+        provider_id: providerId,
+        last_error: lastError,
+      }),
+    });
+    if (!saved.ok) throw new Error(`Could not record email delivery: HTTP ${saved.status}`);
+  }
+  return { state: "configured", sent };
+}
+
 Deno.serve(async (request) => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -252,7 +340,7 @@ Deno.serve(async (request) => {
   }
 
   const metrics: GoldMetric[] = [];
-  const newAlerts: Array<{ metric: string; thresholds: number[]; change_pct: number }> = [];
+  const newAlerts: AlertDelivery[] = [];
   for (const [metric, label] of WATCH) {
     const quote = quotes.get(metric);
     if (!quote) {
@@ -273,7 +361,11 @@ Deno.serve(async (request) => {
     const crossed = THRESHOLDS.filter((threshold) => threshold < 0 ? changePct <= threshold : changePct >= threshold);
     const fresh = crossed.filter((threshold) => !sent.has(threshold));
     for (const threshold of fresh) sent.add(threshold);
-    if (fresh.length) newAlerts.push({ metric, thresholds: fresh, change_pct: changePct });
+    for (const threshold of fresh) newAlerts.push({
+      observed_on: local.date, metric, threshold, label, price: quote.price,
+      open_price: openPrice, change_pct: changePct, triggered_at: now.toISOString(),
+      status: "pending", attempts: 0,
+    });
     metrics.push({
       metric, label, price: quote.price, unit: "INR / 10g", as_of: quote.asOf,
       checked_at: now.toISOString(), open_price: openPrice, open_at: openAt,
@@ -300,11 +392,29 @@ Deno.serve(async (request) => {
     source: "Supabase Edge Function · adaptive Ahmedabad gold tracker",
   };
 
+  if (newAlerts.length) {
+    const queued = await restRequest(
+      `${supabaseUrl}/rest/v1/gold_alert_deliveries?on_conflict=observed_on,metric,threshold`,
+      serviceKey,
+      {
+        method: "POST",
+        headers: { prefer: "resolution=ignore-duplicates,return=minimal" },
+        body: JSON.stringify(newAlerts),
+      },
+    );
+    if (!queued.ok) return json({ error: "Could not queue gold alerts", detail: await queued.text() }, 500);
+  }
+
   const upsert = await restRequest(`${supabaseUrl}/rest/v1/gold_updates?on_conflict=observed_at`, serviceKey, {
     method: "POST",
     headers: { prefer: "resolution=merge-duplicates,return=minimal" },
     body: JSON.stringify(update),
   });
   if (!upsert.ok) return json({ error: "Could not publish gold update", detail: await upsert.text() }, 500);
-  return json({ status, observed_at: update.observed_at, metric_count: metrics.length, issue_count: update.issues.length, new_alerts: newAlerts });
+  try {
+    const email = await deliverPendingAlerts(supabaseUrl, serviceKey);
+    return json({ status, observed_at: update.observed_at, metric_count: metrics.length, issue_count: update.issues.length, new_alerts: newAlerts.length, email });
+  } catch (error) {
+    return json({ status, observed_at: update.observed_at, new_alerts: newAlerts.length, email: "delivery_record_error", detail: error instanceof Error ? error.message : "unknown error" }, 500);
+  }
 });

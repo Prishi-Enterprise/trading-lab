@@ -248,6 +248,33 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .gold-update.partial { border-color: #715c2e; background: #f1d897; }
 .gold-update.failed { border-color: #9d675f; background: #f2cbc4; }
 .gold-issues { max-width: 1280px; margin: 0 auto 22px; }
+.gold-history { max-width: 1280px; margin: 0 auto 22px; }
+.gold-history .panel-heading { align-items: end; gap: 18px; }
+.gold-history label { display: flex; align-items: center; gap: 10px; color: #68756c; font-size: 11px; }
+.gold-history select { max-width: 260px; padding: 9px 12px; border: 1px solid #cbd5c8; border-radius: 6px; background: #fff; color: #22342b; font: inherit; }
+.gold-history-summary { display: flex; align-items: baseline; gap: 16px; margin: 22px 0 8px; }
+.gold-history-summary strong { font: 600 24px Manrope, sans-serif; }
+.gold-history-summary span, .gold-history-note, .gold-history-empty { color: #69766c; font-size: 11px; line-height: 1.6; }
+.gold-history-chart { width: 100%; overflow: hidden; }
+.gold-history-chart svg { display: block; width: 100%; height: 270px; }
+.gold-history-grid { stroke: #dfe7da; stroke-width: 1; }
+.gold-history-axis { fill: #798a7d; font: 11px Inter, sans-serif; }
+.gold-history-line { fill: none; stroke: #937126; stroke-width: 2.5; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.gold-history-point { fill: #937126; }
+.gold-history-range { display: flex; justify-content: space-between; padding: 0 6% 0 7%; color: #69766c; font-size: 10px; }
+.gold-history-note { margin: 20px 0 0; }
+.gold-history-empty { margin: 26px 0; }
+.gold-alerts { max-width: 1280px; margin: 0 auto 22px; }
+.gold-alerts > p { margin: 16px 0; color: #69766c; font-size: 11px; line-height: 1.6; }
+.gold-alerts > p strong { color: #26392e; }
+.gold-alert-list { margin-top: 22px; border-top: 1px solid #dfe7da; }
+.gold-alert-list > div { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid #dfe7da; }
+.gold-alert-list strong, .gold-alert-list span { display: block; }
+.gold-alert-list strong { font-size: 12px; }
+.gold-alert-list div div span { margin-top: 4px; color: #758478; font-size: 10px; }
+.gold-alert-delivery { padding: 7px 9px; border-radius: 4px; background: #f4e8c7; color: #765a18; font-size: 9px; font-weight: 700; white-space: nowrap; }
+.gold-alert-delivery.sent { background: #d8ebdc; color: #285b3d; }
+.gold-alert-delivery.failed, .gold-alert-delivery.expired { background: #f6dbd7; color: #8d3e34; }
 
 /* Experiment index and result pages */
 .experiment-hero { max-width: 1280px; margin: auto; padding: 88px 0 70px; display: flex; justify-content: space-between; align-items: end; gap: 40px; }

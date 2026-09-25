@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Brand } from "@/components/brand";
+import { GoldPriceHistory } from "@/components/gold-price-history";
 import { LabHeader } from "@/components/lab-header";
 import { requireTradingMember } from "@/lib/auth";
 import { money, type GoldMetric, type GoldUpdate } from "@/lib/dashboard";
@@ -31,15 +32,16 @@ function movement(metric: GoldMetric | undefined) {
 
 export default async function GoldTrackerPage() {
   const { supabase, user, membership } = await requireTradingMember();
-  const { data, error } = await supabase
-    .from("gold_updates")
-    .select("*")
-    .order("observed_at", { ascending: false })
-    .limit(12);
-  if (error) throw new Error("Could not load the gold tracker record.");
+  const [latestResult, historyResult, alertResult] = await Promise.all([
+    supabase.from("gold_updates").select("*").order("observed_at", { ascending: false }).limit(1),
+    supabase.from("gold_updates").select("observed_at,metrics").order("observed_at", { ascending: false }).limit(1000),
+    supabase.from("gold_alert_deliveries").select("observed_on,metric,threshold,label,status,triggered_at,sent_at,last_error").order("triggered_at", { ascending: false }).limit(8),
+  ]);
+  if (latestResult.error || historyResult.error || alertResult.error) throw new Error("Could not load the gold tracker record.");
 
-  const updates = (data ?? []) as GoldUpdate[];
-  const latest = updates[0];
+  const latest = (latestResult.data?.[0] ?? null) as GoldUpdate | null;
+  const history = (historyResult.data ?? []) as Pick<GoldUpdate, "observed_at" | "metrics">[];
+  const alerts = (alertResult.data ?? []) as Array<{ observed_on: string; metric: string; threshold: number; label: string; status: string; triggered_at: string; sent_at: string | null; last_error: string | null }>;
   const metrics = latest?.metrics ?? [];
   const primary = metricById(metrics, "bullions:gold24k_10g") ?? metrics[0];
   const workerLabel = latest
@@ -63,6 +65,8 @@ export default async function GoldTrackerPage() {
         <article><p>Alert tiers</p><strong>±2 · 5 · 10%</strong><span>Once per metric per day</span></article>
         <article><p>Execution</p><strong>Disabled</strong><span>Observation and alerts only</span></article>
       </section>
+
+      <GoldPriceHistory updates={history} />
 
       {latest && (
         <section className={`status-banner gold-update ${latest.status}`}>
@@ -88,12 +92,21 @@ export default async function GoldTrackerPage() {
         </article>
       </section>
 
-      {latest?.issues?.length > 0 && (
+      {latest && latest.issues.length > 0 && (
         <section className="panel issue-panel gold-issues">
           <div><p className="eyebrow">COLLECTION ISSUES</p><h2>Unverified sources stay visible.</h2></div>
           <div className="issue-list">{latest.issues.map((issue) => <p key={issue}><span>!</span>{issue}</p>)}</div>
         </section>
       )}
+
+      <section className="panel gold-alerts">
+        <div className="panel-heading"><div><p className="eyebrow">THRESHOLD ALERTS</p><h2>Alert history and delivery.</h2></div><span>±2 · 5 · 10% vs daily open</span></div>
+        <p>Crossings are recorded once per metric and IST day. The hosted worker emails the configured recipient when its mail settings are complete.</p>
+        {alerts.length ? <div className="gold-alert-list">{alerts.map((alert) => <div key={`${alert.observed_on}:${alert.metric}:${alert.threshold}`}>
+          <div><strong>{alert.label} {alert.threshold > 0 ? "+" : ""}{alert.threshold}%</strong><span>{timestamp(alert.triggered_at)}</span></div>
+          <span className={`gold-alert-delivery ${alert.status}`}>{alert.status === "sent" ? "EMAIL ACCEPTED" : alert.status === "failed" ? "EMAIL FAILED" : alert.status === "expired" ? "EMAIL EXPIRED" : "EMAIL PENDING"}</span>
+        </div>)}</div> : <p className="gold-alert-empty">No threshold crossing has been recorded yet.</p>}
+      </section>
 
       <section className="panel sources-panel">
         <div><p className="eyebrow">SOURCE DISCIPLINE</p><h2>Public snapshots, with clear limits.</h2></div>

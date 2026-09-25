@@ -1,9 +1,11 @@
 # Gold Price Tracker · Trading Lab
 
-Ahmedabad gold price tracker → WhatsApp alerts when price moves **±2 / ±5 / ±10 %** vs the day's
-opening price. The hosted dashboard uses Supabase Cron and an Edge Function on a 30-minute base
+Ahmedabad gold price tracker → the hosted worker records **±2 / ±5 / ±10 %** threshold crossings vs the day's
+opening price and can email them to the configured recipient when its Resend secrets are set. The local Python fallback sends WhatsApp alerts through its separately configured notifier. The hosted dashboard uses Supabase Cron and an Edge Function on a 30-minute base
 schedule, then learns a 30–120 minute collection interval by IST hour. The zero-dependency Python
 runner remains available as a local fallback (Python ≥ 3.9 stdlib).
+
+The authenticated Trading Lab gold page shows a graph of the latest 1,000 captured snapshots per source plus a recent alert delivery log. Email setup and migration order are in [the frontend README](../../frontend/README.md#gold-price-history-and-email-alerts). Existing saved price captures become graph history, but prior threshold records are not retrospectively emailed.
 
 The hosted worker reads [bullions.co.in](https://bullions.co.in/location/ahmedabad/) for the
 Ahmedabad association rate and MCX snapshot, plus the timestamped 24K showroom rate from

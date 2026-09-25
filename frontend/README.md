@@ -24,6 +24,18 @@ Apply later migrations in filename order. `202609250001_nse_experiments.sql` cre
 
 The dashboard is designed for Vercel. Required Vercel variables are `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `NEXT_PUBLIC_APP_URL`. Configure them for production, preview and development.
 
+### Gold price history and email alerts
+
+The gold page graphs up to 1,000 recent `gold_updates` captures per source and lists recent threshold events. Apply `supabase/migrations/202609250003_gold_alert_email.sql` before deploying the updated `gold-tracker` Edge Function. The migration creates a member-readable delivery log; only the service role can insert or update it. Historical captures are not backfilled into email alerts.
+
+The hosted worker records a crossing at each ±2/±5/±10% tier once per metric per IST day, then emails the configured recipient through the existing Resend account. Set these **Supabase Edge Function secrets** before enabling mail:
+
+- `RESEND_API_KEY`: the existing Trading Lab Resend key. Do not substitute another project's key or create a replacement.
+- `GOLD_ALERT_FROM`: the verified sender, for example `Gold Tracker <alerts@auth.prishi.in>` only if that domain is verified and permitted for this key.
+- `GOLD_ALERT_TO`: the intended recipient mailbox.
+
+Do not put these values in Next.js public variables, Git, SQL migrations, or the browser. Without all three secrets, events remain `pending` and the worker does not attempt mail. The next eligible worker run retries pending events after configuration or a transient provider failure. Events older than six hours expire instead of sending stale alerts. A provider rejection is shown as `failed` for operator review; fix the sender/key and reset that row to `pending` within the delivery window to retry. The UI's “Email accepted” means the provider accepted the request, not confirmed inbox delivery. Resend's deterministic idempotency key limits duplicate sends during retries. The local Python fallback still uses its separate WhatsApp notifier.
+
 ## Checks
 
 ```sh
