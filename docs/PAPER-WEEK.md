@@ -1,5 +1,7 @@
 # Paper week: 22–28 September 2026
 
+**Stopped 25 September 2026.** Yahoo/NSE data disagreement blocked prospective observations. The old heartbeat is paused and this runbook is retained for audit. Missing days must not be reconstructed as prospective decisions. See [the separate NSE-only trial](NSE-ONLY-PAPER-WEEK.md) for current work.
+
 ## Authority and purpose
 
 The user authorised research, historical data/screeners, buy/sell timing and limit suggestions, with the user executing any eventual real orders. They explicitly require one week of dummy testing before actual investment. This version remains paper-only throughout. A completed week is an operational review milestone, not automatic approval or evidence of profitability. No brokerage credentials, orders, paid data or account opening are part of the trial.
