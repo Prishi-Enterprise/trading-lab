@@ -13,7 +13,9 @@ The gold tracker retains its original Git history inside this repository. Its ru
 
 **Current result:** [21 September research report](reports/2026-09-21-initial-research.md). The first strategy has weak historical results and neither ETF qualifies for a 22 September paper buy. No profitable strategy has been established.
 
-**Authorised trial:** [22–28 September paper week](docs/PAPER-WEEK.md). Five weekday reviews at 17:30 IST are scheduled through the current Codex task, with a final review on 28 September. The host must be available. No real investment during this test; completion does not automatically enable it. A new eligible paper card includes entry ceiling, stop, quantity, cost assumptions and expiry. Quiet no-trade days remain in the record.
+**Paper trial status:** The [22–28 September Yahoo plus NSE trial](docs/PAPER-WEEK.md) was stopped on 25 September after source disagreement blocked prospective results; its records remain preserved and its old heartbeat was deleted. The [25 September–1 October NSE-only trial](docs/NSE-ONLY-PAPER-WEEK.md) is a fresh, separately versioned experiment with finite local automatic checks. Its first decision is due only after the completed 25 September NSE session. No real investment is authorised.
+
+The [25 September open-strategy screen](reports/2026-09-25-open-strategy-screen.md) separately tests fixed crossover and mean-reversion hypotheses on official NSE ETF history; it does not alter the prospective paper trial.
 
 ## Financial context — 21 September 2026
 
@@ -36,9 +38,11 @@ python3 -m tradinglab review --journal examples/paper-trades.json --month 2026-0
 python3 -m unittest discover -s tests -v
 python3 scripts/fetch_market_data.py --asof 2026-09-21
 python3 -m tradinglab.research --asof 2026-09-21
+python3 scripts/fetch_nse_only.py --through 2026-09-24
+python3 -m tradinglab.nse_paper --asof 2026-09-25
 ```
 
-For a current-day prospective snapshot after the research report: `python3 -m tradinglab.paper --asof YYYY-MM-DD`. This refuses backdating and overwrite. The manual journal below uses the original ₹50,000 capital-ceiling scenario; the separate frozen research config uses ₹28,000 paper capital and ₹22,000 reserved outside the experiment. Neither is a live allocation.
+The stopped version's `tradinglab.paper` command is retained for audit. The NSE-only `tradinglab.nse_paper` command refuses backdating and overwrite. The manual journal below uses the original ₹50,000 capital-ceiling scenario; the separate frozen research config uses ₹28,000 paper capital and ₹22,000 reserved outside the experiment. Neither is a live allocation.
 
 The income argument is **net cash from project work available toward that month's bill**, entered as a scenario. It reduces both the half-cost and full-cost funding gaps independently; they are alternatives, not amounts to add together. The CLI does not store it or withdraw anything. All CLI values are INR. The default month is the configured first expense month, not the current date.
 
@@ -76,4 +80,4 @@ This project is maintained in the public `Prishi-Enterprise/trading-lab` reposit
 
 The user will arrange a **fresh demat account** for this experiment. Existing holdings are explicitly outside scope and no holdings export is required to begin. The new account is not yet confirmed opened, funded or connected. Groww is the user's current broker; verify the new account's broker and charges when available.
 
-The paper portfolio starts empty. Remaining live-setup details are the subscription reserve, actual amount allocated/deposited and execution availability. These do not block the authorised research. Do not assume the entire organisation fund is tradeable cash. Next: run the documented paper week, preserve every result and separately research improvements without changing the frozen baseline.
+The paper portfolio starts empty. Remaining live-setup details are the subscription reserve, actual amount allocated/deposited and execution availability. These do not block the authorised research. Do not assume the entire organisation fund is tradeable cash. Next: validate the NSE-only history, record each prospective paper decision on an actual completed exchange day, and preserve both experiment versions.

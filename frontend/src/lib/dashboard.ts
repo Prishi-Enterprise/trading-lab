@@ -1,4 +1,5 @@
 export type PaperUpdate = {
+  experiment_slug?: string;
   as_of: string;
   recorded_at: string;
   status: "verified" | "blocked" | "complete";
@@ -9,6 +10,21 @@ export type PaperUpdate = {
   details: Record<string, unknown>;
   source: string;
 };
+
+export type Experiment = {
+  slug: string;
+  title: string;
+  kind: "prospective" | "retrospective";
+  status: "active" | "stopped" | "complete";
+  category: string;
+  started_on: string | null;
+  ends_on: string | null;
+  summary: string;
+  method: string;
+  display_order: number;
+};
+
+export const nseTrialDates = ["2026-09-25", "2026-09-28", "2026-09-29", "2026-09-30", "2026-10-01"];
 
 export type Signal = {
   close?: string;
@@ -52,6 +68,10 @@ export function money(value: unknown) {
 
 export function shortDate(value: string) {
   return new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", timeZone: "Asia/Kolkata" }).format(new Date(`${value}T12:00:00+05:30`));
+}
+
+export function localTimestamp(value: string) {
+  return new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" }).format(new Date(value));
 }
 
 export function trialStatus(date: string, updates: PaperUpdate[], today: string) {

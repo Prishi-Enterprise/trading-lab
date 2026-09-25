@@ -19,7 +19,7 @@ Potential starting research area, not an approved recommendation: unleveraged da
 5. Record prospective paper signals before outcomes are known. Keep losing signals and no-trade days. Review disagreement between historical assumptions and observed executable prices. Paper fills can be optimistic.
 6. Only consider discussing a small live trial once suitability and evidence have been reviewed. A paper result never automatically enables orders. Define an affordable loss limit first; never increase position size to catch up to a bill.
 
-Do not promise monthly income or capital preservation. Subscription expenses start in October 2026; show ₹5,500 and ₹11,000 funding scenarios separately, and keep project receipts distinct from paper results. The authorised five-session paper monitor runs through 28 September; it does not connect a broker, place orders or purchase data. Preserve the frozen baseline; version proposed tuning independently.
+Do not promise monthly income or capital preservation. Subscription expenses start in October 2026; show ₹5,500 and ₹11,000 funding scenarios separately, and keep project receipts distinct from paper results. The original five-session paper monitor was stopped on 25 September and its heartbeat deleted. The separate NSE-only week has finite local checks through 1 October; neither experiment connects a broker, places orders or purchases data. Preserve each frozen baseline; version later hypotheses independently. See the [open strategy screen](../reports/2026-09-25-open-strategy-screen.md) for exploratory comparisons.
 
 ## Source context
 
