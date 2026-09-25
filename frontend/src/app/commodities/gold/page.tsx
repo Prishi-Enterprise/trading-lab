@@ -101,7 +101,7 @@ export default async function GoldTrackerPage() {
 
       <section className="panel gold-alerts">
         <div className="panel-heading"><div><p className="eyebrow">THRESHOLD ALERTS</p><h2>Alert history and delivery.</h2></div><span>±2 · 5 · 10% vs daily open</span></div>
-        <p>Crossings are recorded once per metric and IST day. The hosted worker emails the configured recipient when its mail settings are complete.</p>
+        <p>Crossings are recorded once per metric and IST day. Email alerts go to <strong>sb@prishi.in</strong> from <strong>alerts@alerts.prishi.in</strong>. Delivery status appears below.</p>
         {alerts.length ? <div className="gold-alert-list">{alerts.map((alert) => <div key={`${alert.observed_on}:${alert.metric}:${alert.threshold}`}>
           <div><strong>{alert.label} {alert.threshold > 0 ? "+" : ""}{alert.threshold}%</strong><span>{timestamp(alert.triggered_at)}</span></div>
           <span className={`gold-alert-delivery ${alert.status}`}>{alert.status === "sent" ? "EMAIL ACCEPTED" : alert.status === "failed" ? "EMAIL FAILED" : alert.status === "expired" ? "EMAIL EXPIRED" : "EMAIL PENDING"}</span>
