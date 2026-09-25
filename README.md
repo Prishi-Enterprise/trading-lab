@@ -13,7 +13,9 @@ The gold tracker retains its original Git history inside this repository. Its ru
 
 **Current result:** [21 September research report](reports/2026-09-21-initial-research.md). The first strategy has weak historical results and neither ETF qualifies for a 22 September paper buy. No profitable strategy has been established.
 
-**Paper trial status:** The [22–28 September Yahoo plus NSE trial](docs/PAPER-WEEK.md) was stopped on 25 September after source disagreement blocked prospective results; its records remain preserved and its heartbeat is paused. The [25 September–1 October NSE-only trial](docs/NSE-ONLY-PAPER-WEEK.md) is a fresh, separately versioned experiment. Its first decision is due only after the completed 25 September NSE session. No real investment is authorised.
+**Paper trial status:** The [22–28 September Yahoo plus NSE trial](docs/PAPER-WEEK.md) was stopped on 25 September after source disagreement blocked prospective results; its records remain preserved and its old heartbeat was deleted. The [25 September–1 October NSE-only trial](docs/NSE-ONLY-PAPER-WEEK.md) is a fresh, separately versioned experiment with finite local automatic checks. Its first decision is due only after the completed 25 September NSE session. No real investment is authorised.
+
+The [25 September open-strategy screen](reports/2026-09-25-open-strategy-screen.md) separately tests fixed crossover and mean-reversion hypotheses on official NSE ETF history; it does not alter the prospective paper trial.
 
 ## Financial context — 21 September 2026
 
