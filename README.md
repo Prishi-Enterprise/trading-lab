@@ -6,14 +6,14 @@ The authenticated [Trading Lab frontend](frontend/README.md) presents the frozen
 
 Trading Lab has two main sections:
 
-- **Stocks** — the frozen ETF breakout research and prospective paper record.
+- **Experiments** — an index of the active NSE-only paper week, the stopped first trial and the separate retrospective strategy screen, each with its own result page.
 - **Commodities** — focused observation tools, beginning with the migrated [Ahmedabad Gold Price Tracker](commodities/gold-price-tracker/README.md).
 
 The gold tracker retains its original Git history inside this repository. Its runtime state and notification credentials remain local and ignored.
 
 **Current result:** [21 September research report](reports/2026-09-21-initial-research.md). The first strategy has weak historical results and neither ETF qualifies for a 22 September paper buy. No profitable strategy has been established.
 
-**Paper trial status:** The [22–28 September Yahoo plus NSE trial](docs/PAPER-WEEK.md) was stopped on 25 September after source disagreement blocked prospective results; its records remain preserved and its old heartbeat was deleted. The [25 September–1 October NSE-only trial](docs/NSE-ONLY-PAPER-WEEK.md) is a fresh, separately versioned experiment with finite local automatic checks. Its first decision is due only after the completed 25 September NSE session. No real investment is authorised.
+**Paper trial status:** The [22–28 September Yahoo plus NSE trial](docs/PAPER-WEEK.md) was stopped on 25 September after source disagreement blocked prospective results; its records remain preserved and its old heartbeat was deleted. The [25 September–1 October NSE-only trial](docs/NSE-ONLY-PAPER-WEEK.md) is a fresh, separately versioned experiment with finite Supabase checks at 18:30 and 20:30 IST on each trial session. Its first decision is due only after the completed 25 September NSE session. The authenticated dashboard shows the latest record. No real investment is authorised.
 
 The [25 September open-strategy screen](reports/2026-09-25-open-strategy-screen.md) separately tests fixed crossover and mean-reversion hypotheses on official NSE ETF history; it does not alter the prospective paper trial.
 
