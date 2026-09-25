@@ -5,13 +5,14 @@ export function LabHeader({
   active,
   displayName,
 }: {
-  active: "stocks" | "commodities";
+  active: "experiments" | "stocks" | "commodities";
   displayName: string;
 }) {
   return (
     <header className="topbar">
       <Brand inverse />
       <nav className="lab-nav" aria-label="Trading Lab sections">
+        <Link className={active === "experiments" ? "active" : ""} href="/">Experiments</Link>
         <Link className={active === "stocks" ? "active" : ""} href="/stocks">Stocks</Link>
         <Link className={active === "commodities" ? "active" : ""} href="/commodities">Commodities</Link>
       </nav>
